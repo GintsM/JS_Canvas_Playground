@@ -1,7 +1,9 @@
 // Square Canvas
+import getRandom from './ran_fr_arr.js'
+
 
 // side dimensions
-DIM = 600;
+const DIM = 600;
 
 
 const canvas = document.getElementById("myCanvas");
@@ -10,13 +12,14 @@ canvas.setAttribute('height', `${DIM}px`)
 const ctx = canvas.getContext("2d"),
   boxSize = 30,
   boxes = Math.floor(DIM / boxSize);
-canvas.addEventListener('click', clear);
-canvas.addEventListener('mousemove', handleClick);
+
+const zero_to_n = Array(boxes * boxes).fill(4)
+
+// const handleClick = () => console.log(getRandom(zero_to_n))
+
 
 function drawBox() {
-
   ctx.beginPath();
-  // ctx.fillStyle = "white";
   ctx.lineWidth = 2;
   ctx.strokeStyle = 'black';
   let x, y = 0;
@@ -29,10 +32,6 @@ function drawBox() {
     ctx.stroke();
   }
   ctx.closePath();
-  // ctx.font = '18px serif';
-  // ctx.fillText("This is twxt", 0, 30)
-
-
 }
 
 function handleClick(e) {
@@ -40,15 +39,23 @@ function handleClick(e) {
   x = Math.floor(e.offsetX / boxSize) * boxSize
   y = Math.floor(e.offsetY / boxSize) * boxSize
   ctx.font = '18px serif';
+  ctx.fillText(`${getRandom(zero_to_n)}`, x, y - 9 + boxSize);
+}
+
+/*function handleClick(e) {
+  let x, y = 0;
+  x = Math.floor(e.offsetX / boxSize) * boxSize
+  y = Math.floor(e.offsetY / boxSize) * boxSize
+  ctx.font = '18px serif';
   const countYPart = y > 0 ? y / boxSize * (DIM / boxSize) : y
 
-  // fillText write up from passed arg. y 
+  // fillText writes up from passed arg. y 
+  // TODO here must call function to fill all cells
   ctx.fillText(`${x > 0 ? x / boxSize + 1 + countYPart : (x + 1) + countYPart}`, x, y + boxSize);
   // ctx.fillStyle = "black";
-
   // to fill rectang with black uncomment next line
   // ctx.fillRect(x, y, boxSize, boxSize);
-}
+}*/
 
 /*
 options for fillText method
@@ -64,3 +71,4 @@ function clear(e) {
 }
 
 drawBox();
+canvas.addEventListener('click', handleClick);
