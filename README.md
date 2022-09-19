@@ -1,8 +1,13 @@
 # JS_Canvas_Playground
 
-Playing with Canvas. 
+Playing with Canvas.
 
-So step 1: Cell numbers 
+Step 2: Delayed grid filling with random sequence
+ - still only thing you can provide is dimensions
+ - You cannot interact at this moment, just to reload and it will do it again
+ - Not promiss I will make a button to clear screen.
+
+Step 1: Cell numbers 
   -  dimensions you provide in DIM variable (it is square) valid for all versions
   - when you hover over table it will write cell number in cell. horizontal sequence.
   - uncomment line and you can draw with black. Have your own approach and create eraser and picking color, make grid thicker and you have option to make nice drawing table in browser
