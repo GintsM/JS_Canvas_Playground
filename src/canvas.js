@@ -12,11 +12,7 @@ canvas.setAttribute('height', `${DIM}px`)
 const ctx = canvas.getContext("2d"),
   boxSize = 30,
   boxes = Math.floor(DIM / boxSize);
-
-const zero_to_n = Array(boxes * boxes).fill(4)
-
-// const handleClick = () => console.log(getRandom(zero_to_n))
-
+let zero_to_n = Array(boxes * boxes).fill(4)
 
 function drawBox() {
   ctx.beginPath();
@@ -34,13 +30,25 @@ function drawBox() {
   ctx.closePath();
 }
 
-function handleClick(e) {
-  let x, y = 0;
-  x = Math.floor(e.offsetX / boxSize) * boxSize
-  y = Math.floor(e.offsetY / boxSize) * boxSize
-  ctx.font = '18px serif';
-  ctx.fillText(`${getRandom(zero_to_n)}`, x, y - 9 + boxSize);
+const fillCells = () => {
+  while (zero_to_n.length > 1) {
+    let randomValue = getRandom(zero_to_n);
+    zero_to_n = zero_to_n.filter((val, index) => {
+      val = index
+      return index !== randomValue;
+    })
+
+  }
 }
+
+// function handleClick(e) {
+//   let x, y = 0;
+//   x = Math.floor(e.offsetX / boxSize) * boxSize
+//   y = Math.floor(e.offsetY / boxSize) * boxSize
+//   ctx.font = `${boxSize / 2}px serif`;
+//   // TODO clear field if there something is already
+//   ctx.fillText(`${getRandom(zero_to_n)}`, x, y + boxSize * 0.75);
+// }
 
 /*function handleClick(e) {
   let x, y = 0;
@@ -57,18 +65,5 @@ function handleClick(e) {
   // ctx.fillRect(x, y, boxSize, boxSize);
 }*/
 
-/*
-options for fillText method
-fillText(text, x, y)
-fillText(text, x, y, maxWidth)
-Text insert
-*/
-function clear(e) {
-  ctx.fillStyle = "white";
-  ctx.fillRect(Math.floor(e.offsetX / boxSize) * boxSize,
-    Math.floor(e.offsetY / boxSize) * boxSize,
-    boxSize, boxSize);
-}
-
 drawBox();
-canvas.addEventListener('click', handleClick);
+canvas.addEventListener('click', fillCells);
