@@ -3,7 +3,7 @@
 Playing with Canvas.
 
 <details>
-<summary>Step 3: Delayed Multigrid filling with random sequence</summary>
+<summary>Step 3: Delayed Multigrid filling random sequence</summary>
 
  - by default there is grid 4 x 4, you can select square number up to 25
    and it will redraw grid
