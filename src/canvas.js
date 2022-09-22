@@ -55,5 +55,13 @@ const fillCells = () => {
   slowFilling();
 }
 
+
 drawBox();
-canvas.addEventListener('click', fillCells);
+
+let emptyGrid = true
+canvas.addEventListener('click', () => {
+  if (emptyGrid) {
+    fillCells();
+  }
+  emptyGrid = false
+});
