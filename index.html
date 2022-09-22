@@ -10,9 +10,23 @@
 </head>
 
 <body>
-  <img src="./src/img/transparent_rose.png" alt="grid">
-  <canvas id="myCanvas" style="border:1px solid #000000;">
-  </canvas>
+  <div class="img">
+    <img src="./src/img/transparent_rose.png" alt="grid">
+  </div>
+  <div class="choice">
+    <label for="sqNumber">Choose Grid Cells in Row:</label>
+    <select name="cars" id="sqNumber">
+      <option value="4">4</option>
+      <option value="9">9</option>
+      <option value="16">16</option>
+      <option value="25">25</option>
+    </select>
+    <button type="button" id="fillButton"><i>Fill the grid</i></button>
+  </div>
+  <div class="canvas">
+    <canvas id="myCanvas" style="border:1px solid #000000;">
+    </canvas>
+  </div>
 
   <script type="module" src="./src/canvas.js"></script>
 

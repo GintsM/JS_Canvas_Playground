@@ -1,7 +1,8 @@
 class Cell {
   constructor(options) {
-    this.options = Array(options)
+    this.options = Array(options).fill().map((_, i) => i)
     this.value = ''
+    console.log("Array is ready", options)
   }
   check() {
     if (this.options.length === 1) {
