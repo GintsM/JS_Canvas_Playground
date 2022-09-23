@@ -4,7 +4,7 @@ import Cell from './Cell.js';
 
 const canvas = document.getElementById("myCanvas");
 
-const canvasScreen = (GRIDROWS = 4) => {
+const canvasScreen = (GRIDROWS = 1) => {
   const DIM = 600;
   const roundedHeightWidth = DIM % GRIDROWS === 0 ? DIM : Math.floor(DIM / GRIDROWS) * GRIDROWS
 
@@ -61,6 +61,7 @@ const canvasScreen = (GRIDROWS = 4) => {
   }
 
   const fillCells = () => {
+    if (GRIDROWS === 1) return;
     let posX = 0;
     let posY = 0;
     let loopThroughTable = 0
