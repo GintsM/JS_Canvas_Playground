@@ -7,7 +7,8 @@ Playing with Canvas.
 
  - by default there is grid 4 x 4, you can select square number up to 25
    and it will redraw grid
- - filling is syncronizet, when innergrid is filled same interval until it start fill next
+ - filling is syncronizet, -outer and innergrid
+ - outergrid use more bold
  - Disabled Fill button after you made your choice
 </details>
 

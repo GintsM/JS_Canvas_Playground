@@ -13,24 +13,29 @@ const canvasScreen = (GRIDROWS = 4) => {
   const ctx = canvas.getContext("2d"),
     boxSize = Math.floor(DIM / GRIDROWS);
   let table = Array(GRIDROWS * GRIDROWS).fill().map(_ => new Cell(GRIDROWS))
-  console.log(table[0], typeof GRIDROWS, "Check")
 
   function drawBox() {
     ctx.fillStyle = 'darkblue';
     ctx.fill();
-    ctx.beginPath();
-    ctx.lineWidth = 2;
     ctx.strokeStyle = 'black';
-    let x, y = 0;
+    let x = 0, y = 0;
 
-    for (let row = 0; row < GRIDROWS; row++) {
+    for (let row = 0; row <= GRIDROWS; row++) {
+      ctx.beginPath();
+
+      // X axe
       x = row * boxSize;
-      ctx.rect(x, y, boxSize, DIM);
+      (row % Math.sqrt(GRIDROWS)) === 0 ? ctx.lineWidth = 4 : ctx.lineWidth = 2;
+      ctx.moveTo(x, y)
+      ctx.lineTo(x, y + DIM)
       ctx.stroke();
-      ctx.rect(y, x, DIM, boxSize);
+
+      // Y axe
+      ctx.moveTo(y, x)
+      ctx.lineTo(y + DIM, x)
       ctx.stroke();
+      ctx.closePath();
     }
-    ctx.closePath();
   }
 
   const syncTimeout = 200
@@ -41,14 +46,14 @@ const canvasScreen = (GRIDROWS = 4) => {
       await new Promise(r => setTimeout(r, syncTimeout));
       let randomValue = getRandom(array);
       ctx.font = `${boxSize / 2}px serif`;
+
       // here comes drawing
       ctx.fillText(`${randomValue + 1}`, posX + boxSize * .25, posY + boxSize * 0.75);
       posX += boxSize;
       if (posX === boxSize * Math.sqrt(GRIDROWS) + savedXvalue) {
-        posX = savedXvalue; // This chages with time
+        posX = savedXvalue;
         posY += boxSize;
       }
-
       array = array.filter((val) => {
         return val !== randomValue;
       })
@@ -58,7 +63,6 @@ const canvasScreen = (GRIDROWS = 4) => {
   const fillCells = () => {
     let posX = 0;
     let posY = 0;
-    // Create outer loop for Array
     let loopThroughTable = 0
     const outerGrid = async () => {
       while (loopThroughTable < GRIDROWS) {
@@ -87,5 +91,3 @@ fillButton.addEventListener('click', () => {
   fillButton.disabled = true;
   canvasScreen(parseInt(choiceNumber.value, 10))
 });
-
-
