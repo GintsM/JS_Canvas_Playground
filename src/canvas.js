@@ -1,5 +1,5 @@
 // Square Canvas
-import getRandom from './ran_fr_arr.js'
+import { frameElement } from './ran_fr_arr.js'
 import Cell from './Cell.js';
 import { Table } from './Cell.js';
 import { drawBox } from './Cell.js';
@@ -27,26 +27,20 @@ frame[ROW * 2 ... ROW *3-1] - grid
 can use formulas of variables to reach quickly frames
  */
 
-
 let line = 0, col = 0, grid = 0;
 const table = Array(ROW * ROW).fill().map((_, i) => {
   line = Math.floor(i / ROW) // SORT HORIZONTAL
   col = i - ROW * (line) //SORT VERTICAL
   grid = Math.floor(col / sqR) + Math.floor(line / sqR) * sqR
-  return new Cell(frame[line].elmOptions, frame[col + ROW].elmOptions, frame[grid + 2 * ROW].elmOptions)
+  return new Cell(frame[line].tIndx, frame[col + ROW].tIndx, frame[grid + 2 * ROW].tIndx)
 })
 
-
-// frame[0].elmOptions.pop()
-// frame[0].elmOptions.pop()
-// // console.log(frame)
-// table[0].cellsOptions()
+// frame[0].tIndx.pop()
+// frame[0].tIndx.pop()
 
 drawBox(ctx, ROW, boxSize, DIM)
 
-
-let markedSqureX = 0
-let markedSqureY = 0
+let markedSqureX = 0, markedSqureY = 0
 let ableToWrite = false
 
 let tempX = 0, tempY = 0, tempGr = 0;
@@ -56,18 +50,21 @@ const clearBox = (x, y, width = boxSize) => {
   tempY = Math.floor(x / width)
   tempGr = Math.floor(tempY / sqR) + Math.floor(tempX / sqR) * sqR + 2 * ROW
 
-
-  console.log(tempX, tempY + ROW, tempGr, "clearBox")
-
   x = Math.floor(x / width) * width;
   y = Math.floor(y / width) * width;
-
   ctx.clearRect(x, y, width, width)
   markedSqureX = x;
   markedSqureY = y;
   ableToWrite = true
 }
 
+const showFrame = () => {
+  const frameList = document.getElementById('frame')
+  while (frameList.firstChild) {
+    frameList.removeChild(frameList.firstChild);
+  }
+  frame.forEach((el, i) => frameElement(i + 1, el.tIndx, frameList))
+}
 // Event Listeners
 
 canvas.addEventListener('click', (e) => {
@@ -75,13 +72,19 @@ canvas.addEventListener('click', (e) => {
 })
 
 document.addEventListener('keydown', (e) => {
-  let pressedKey = parseInt(e.key)
-  if (pressedKey && ableToWrite) {
+  let pKey = parseInt(e.key)
+
+  if (frame[tempX].tIndx[pKey - 1] && frame[tempY + ROW].tIndx[pKey - 1]
+    && frame[tempGr].tIndx[pKey - 1] && ableToWrite) {
+    frame[tempX].tIndx[pKey - 1] = 0;
+    frame[tempY + ROW].tIndx[pKey - 1] = 0;
+    frame[tempGr].tIndx[pKey - 1] = 0;
     ctx.font = `${boxSize / 2}px serif`;
-    ctx.fillText(`${pressedKey}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
+    ctx.fillText(`${pKey}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
     ableToWrite = false
   }
   drawBox(ctx, ROW, boxSize, DIM)
+  showFrame()
 })
 
 //   const syncTimeout = 200

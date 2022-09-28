@@ -1,12 +1,12 @@
 /**
  * Table class
- * @type {{elmOptions:Array}}
+ * @type {{tIndx:Array}}
  * 1/3 part lines, 2/3 columns, 3/3 Grid
  */
 
 export class Table {
-  constructor(elmOptions) {
-    this.elmOptions = Array(elmOptions).fill().map((_, i) => i)
+  constructor(tIndx) {
+    this.tIndx = Array(tIndx).fill().map((_, i) => i + 1)
   }
 }
 
