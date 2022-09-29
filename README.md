@@ -8,7 +8,7 @@ Playing with Canvas.
  will use only cell from this moment
  - added Favicon it is so much easier to work when you have your own favicon. recomend to all easy to find where is your project in hundred tables
  - still work on any square number, but from now it  could start to be more adjusted to 9 x 9. (Sudoku)
-</details
+</details>
 
 <details>
 <summary>Step 3: Delayed Multigrid filling random sequence</summary>
