@@ -19,20 +19,30 @@ class Cell {// TODO create checkByLength() maybe
     this.value = '';
   }
 
-  check() { // may consider to pass for 
+  check() {
     if (!this.value) {
-      this.line.length === 1 ? this.value = this.line[0] :
-        this.col.length === 1 ? this.value = this.col[0] :
-          this.grid === 1 ? this.value = this.grid[0] :
-            "keep removing";
+      for (let [_, values] of Object.entries(this)) {
+        if (values) {
+          let count = 0, i = 0, temp = 0;
+          while (count <= 1) {
+            temp ? '' : temp = values[i];
+            values[i] ? count += 1 : '';
+            if (i === values.length - 1 && count === 1) {
+              this.value = temp;
+              return this.value
+            }
+            i += 1;
+          }
+        }
+      }
     }
     return this.value
   }
 
   cellsOptions() {
-    let arr = []
-    arr = this.line.concat(this.col, this.grid)
-    console.log(arr, "cellsOptions")
+    // let arr = []
+    // arr = this.line.concat(this.col, this.grid)
+    // console.log(arr, "cellsOptions")
   }
 }
 

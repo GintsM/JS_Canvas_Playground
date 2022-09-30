@@ -22,9 +22,8 @@ const table = Array(ROW * ROW).fill().map((_, i) => {
   return new Cell(frame[line].tIndx, frame[col + ROW].tIndx, frame[grid + 2 * ROW].tIndx);
 })
 
-let markedSqureX = 0, markedSqureY = 0;
+let markedSqureX = 0, markedSqureY = 0, tempX = 0, tempY = 0;
 let ableToWrite = false;
-let tempX = 0, tempY = 0;
 
 const clearBox = (x, y, width = boxSize) => {
   tempX = Math.floor(y / width);
@@ -45,9 +44,10 @@ document.addEventListener('keydown', (e) => {
   if (table[tempX * ROW + tempY].line[pKey - 1] && table[tempX * ROW + tempY].col[pKey - 1]
     && table[tempX * ROW + tempY].grid[pKey - 1] && ableToWrite) {
 
-    for (let [_, value] of Object.entries(table[tempX * ROW + tempY])) {
-      value ? value[pKey - 1] = 0 : value = pKey;
+    for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
+      values ? values[pKey - 1] = 0 : table[tempX * ROW + tempY].value = pKey;
     }
+    // console.log(table[tempX * ROW + tempY], "check")
     ctx.font = `${boxSize / 2}px serif`;
     ctx.fillText(`${pKey}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
     ableToWrite = false
