@@ -22,36 +22,71 @@ const table = Array(ROW * ROW).fill().map((_, i) => {
   return new Cell(frame[line].tIndx, frame[col + ROW].tIndx, frame[grid + 2 * ROW].tIndx);
 })
 
-let markedSqureX = 0, markedSqureY = 0, tempX = 0, tempY = 0;
+let markedSqureX = 0, markedSqureY = 0, tempX = 0, tempY = 0, tempV = 0;
 let ableToWrite = false;
 
 const clearBox = (x, y, width = boxSize) => {
   tempX = Math.floor(y / width);
   tempY = Math.floor(x / width);
   ctx.clearRect(tempY * width, tempX * width, width, width)
+  tempV = table[tempX * ROW + tempY].value; // Figure out what valuae are here
+  console.log(tempV, "thios is tempVal")
   markedSqureX = tempY * width;
   markedSqureY = tempX * width;
   ableToWrite = true
 }
 
+// draw value on grid
+const drawValue = (val, f_style = '', textCol = '') => {
+  ctx.font = `${f_style} ${boxSize / 2}px serif`;
+  ctx.fillStyle = `${textCol}`;
+  ctx.fillText(`${val}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
+
+}
+
 // Event Listeners
-canvas.addEventListener('click', (e) => {// TODO make so it returns value if there are/ if error in logic, so you can change
+canvas.addEventListener('click', (e) => {
+  if (tempV) drawValue(tempV, '', 'blue');// When click on other cell restore value
+  drawBox(ctx, ROW, boxSize, DIM)//Restore board
   clearBox(e.offsetX, e.offsetY)
+  console.table(table[tempX * ROW + tempY]);
+  console.log("Cell: ", tempX * ROW + tempY)
+  console.log("TempV: ", tempV, ableToWrite, 'ab_write')
 })
 
 document.addEventListener('keydown', (e) => {
-  let pKey = parseInt(e.key)
-  if (table[tempX * ROW + tempY].line[pKey - 1] && table[tempX * ROW + tempY].col[pKey - 1]
-    && table[tempX * ROW + tempY].grid[pKey - 1] && ableToWrite) {
 
+  // if tempV than
+  // i can restrict access to all functions, beause there are already value
+  // if e.key is number (!isNan(e.key)) must update Cell
+  // Should think how to read if there other clikc
+  console.log(e.key)
+  let pKey = parseInt(e.key)
+  // if there are value
+  if (tempV && pKey) {
+    for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
+      if (Array.isArray(values)) {
+        values[tempV - 1] = tempV;
+        values[pKey - 1] = 0;
+      }
+    }
+    table[tempX * ROW + tempY].value = pKey
+    drawValue(pKey)
+    tempV = 0;
+  }
+
+  // if no values
+  else if ((table[tempX * ROW + tempY].line[pKey - 1] && table[tempX * ROW + tempY].col[pKey - 1]
+    && table[tempX * ROW + tempY].grid[pKey - 1] && ableToWrite)) {
     for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
       values ? values[pKey - 1] = 0 : table[tempX * ROW + tempY].value = pKey;
     }
-    // console.log(table[tempX * ROW + tempY], "check")
-    ctx.font = `${boxSize / 2}px serif`;
-    ctx.fillText(`${pKey}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
-    ableToWrite = false
+    drawValue(pKey, 'bold', 'black')
   }
+
+
+  ableToWrite = false;
+
   drawBox(ctx, ROW, boxSize, DIM)
 })
 

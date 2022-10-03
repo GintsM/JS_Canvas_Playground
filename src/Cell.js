@@ -19,7 +19,7 @@ class Cell {// TODO create checkByLength() maybe
     this.value = '';
   }
 
-  check() {
+  updateValIfLast() {
     if (!this.value) {
       for (let [_, values] of Object.entries(this)) {
         if (values) {
