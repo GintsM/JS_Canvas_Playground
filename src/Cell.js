@@ -19,6 +19,11 @@ class Cell {// TODO create checkByLength() maybe
     this.value = '';
   }
 
+  emptyCell(ind) {
+    if (this.line[ind] && this.col[ind] && this.grid[ind]) return true
+    return false
+  }
+
   updateValIfLast() {
     if (!this.value) {
       for (let [_, values] of Object.entries(this)) {
