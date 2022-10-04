@@ -39,11 +39,6 @@ class Cell {// TODO create checkByLength() maybe
     return this.value
   }
 
-  cellsOptions() {
-    // let arr = []
-    // arr = this.line.concat(this.col, this.grid)
-    // console.log(arr, "cellsOptions")
-  }
 }
 
 export default Cell

@@ -2,6 +2,13 @@
 
 Playing with Canvas.
 <details>
+<summary>Step 5: Sudoku table - able to fill only valid combinations</summary>
+
+ - You can replace any value in grid.it will change only color
+ - you can delete any entered value. For first time :)
+ - still no proper styling for page.
+</details>
+<details>
 <summary>Step 4: Spine is ready, time to add some bones</summary>
 
  - last time will show frame which contains all arrays
