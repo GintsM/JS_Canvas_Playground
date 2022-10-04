@@ -1,130 +1,91 @@
 // Square Canvas
-import { frameElement } from './ran_fr_arr.js'
-import Cell from './Cell.js';
-import { Table } from './Cell.js';
-import { drawBox } from './Cell.js';
+import Cell, { Table, drawBox } from './Cell.js';
 
 const canvas = document.getElementById("myCanvas");
 const DIM = 600;
-let ROW = 9
+let ROW = 9;
 let boxSize = Math.floor(DIM / ROW);
-const sqR = Math.sqrt(ROW)
-const roundedHeightWidth = DIM % ROW === 0 ? DIM : Math.floor(DIM / ROW) * ROW
-
-canvas.setAttribute('width', `${roundedHeightWidth}px`)
-canvas.setAttribute('height', `${roundedHeightWidth}px`)
+const sqR = Math.sqrt(ROW);
+const roundedHeightWidth = DIM % ROW === 0 ? DIM : Math.floor(DIM / ROW) * ROW;
+canvas.setAttribute('width', `${roundedHeightWidth}px`);
+canvas.setAttribute('height', `${roundedHeightWidth}px`);
 const ctx = canvas.getContext("2d");
 
-let frame = Array(ROW * 3).fill().map(_ => new Table(ROW))
-/* frame to modify when entering random numbers in cells
-so it is less iterations
-frame[0 ... ROW -1] - lines
-frame[ROW ... ROW * 2 -1] -columns
-frame[ROW * 2 ... ROW *3-1] - grid
- */
-
-/* Table is iteration through all Cells
-can use formulas of variables to reach quickly frames
- */
+let frame = Array(ROW * 3).fill().map(_ => new Table(ROW));
 
 let line = 0, col = 0, grid = 0;
 const table = Array(ROW * ROW).fill().map((_, i) => {
-  line = Math.floor(i / ROW) // SORT HORIZONTAL
-  col = i - ROW * (line) //SORT VERTICAL
-  grid = Math.floor(col / sqR) + Math.floor(line / sqR) * sqR
-  return new Cell(frame[line].tIndx, frame[col + ROW].tIndx, frame[grid + 2 * ROW].tIndx)
+  line = Math.floor(i / ROW); // SORT HORIZONTAL
+  col = i - ROW * (line); //SORT VERTICAL
+  grid = Math.floor(col / sqR) + Math.floor(line / sqR) * sqR;
+  return new Cell(frame[line].tIndx, frame[col + ROW].tIndx, frame[grid + 2 * ROW].tIndx);
 })
 
-// frame[0].tIndx.pop()
-// frame[0].tIndx.pop()
-
-drawBox(ctx, ROW, boxSize, DIM)
-
-let markedSqureX = 0, markedSqureY = 0
-let ableToWrite = false
-
-let tempX = 0, tempY = 0, tempGr = 0;
+let markedSqureX = 0, markedSqureY = 0, tempX = 0, tempY = 0, tempV = 0;
+let ableToWrite = false;
 
 const clearBox = (x, y, width = boxSize) => {
-  tempX = Math.floor(y / width)
-  tempY = Math.floor(x / width)
-  tempGr = Math.floor(tempY / sqR) + Math.floor(tempX / sqR) * sqR + 2 * ROW
-
-  x = Math.floor(x / width) * width;
-  y = Math.floor(y / width) * width;
-  ctx.clearRect(x, y, width, width)
-  markedSqureX = x;
-  markedSqureY = y;
+  tempX = Math.floor(y / width);
+  tempY = Math.floor(x / width);
+  ctx.clearRect(tempY * width, tempX * width, width, width)
+  tempV = table[tempX * ROW + tempY].value; // Figure out what valuae are here
+  markedSqureX = tempY * width;
+  markedSqureY = tempX * width;
   ableToWrite = true
 }
 
-const showFrame = () => {
-  const frameList = document.getElementById('frame')
-  while (frameList.firstChild) {
-    frameList.removeChild(frameList.firstChild);
-  }
-  frame.forEach((el, i) => frameElement(i + 1, el.tIndx, frameList))
+// draw value on grid
+const drawValue = (val, f_style = '', textCol = '') => {
+  ctx.font = `${f_style} ${boxSize / 2}px serif`;
+  ctx.fillStyle = `${textCol}`;
+  ctx.fillText(`${val}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
 }
-// Event Listeners
 
+// Event Listeners
 canvas.addEventListener('click', (e) => {
+  if (tempV) drawValue(tempV, '', 'blue');// When click on other cell restore value
+  drawBox(ctx, ROW, boxSize, DIM)//Restore board
   clearBox(e.offsetX, e.offsetY)
 })
 
 document.addEventListener('keydown', (e) => {
   let pKey = parseInt(e.key)
 
-  if (frame[tempX].tIndx[pKey - 1] && frame[tempY + ROW].tIndx[pKey - 1]
-    && frame[tempGr].tIndx[pKey - 1] && ableToWrite) {
-    frame[tempX].tIndx[pKey - 1] = 0;
-    frame[tempY + ROW].tIndx[pKey - 1] = 0;
-    frame[tempGr].tIndx[pKey - 1] = 0;
-    ctx.font = `${boxSize / 2}px serif`;
-    ctx.fillText(`${pKey}`, markedSqureX + boxSize * .25, markedSqureY + boxSize * 0.75);
-    ableToWrite = false
+  // if there are value in Cell
+  if (tempV && pKey) {
+    for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
+      if (Array.isArray(values)) {
+        values[tempV - 1] = tempV;
+        values[pKey - 1] = 0;
+      }
+    }
+    table[tempX * ROW + tempY].value = pKey
+    drawValue(pKey)
+    tempV = 0;
   }
+
+  // if no values in Cell 
+  else if ((table[tempX * ROW + tempY].line[pKey - 1] && table[tempX * ROW + tempY].col[pKey - 1]
+    && table[tempX * ROW + tempY].grid[pKey - 1] && ableToWrite)) {
+    for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
+      values ? values[pKey - 1] = 0 : table[tempX * ROW + tempY].value = pKey;
+    }
+    drawValue(pKey, 'bold', 'black')
+  }
+
+  // delete value in Cell
+  else if (tempV && e.key === 'Delete') {
+    for (let [_, values] of Object.entries(table[tempX * ROW + tempY])) {
+      if (Array.isArray(values)) {
+        values[tempV - 1] = tempV;
+      }
+    }
+    table[tempX * ROW + tempY].value = ''
+    drawValue('')
+    tempV = 0;
+  }
+  console.table(table[tempX * ROW + tempY])
+  ableToWrite = false;
   drawBox(ctx, ROW, boxSize, DIM)
-  showFrame()
 })
-
-//   const syncTimeout = 200
-
-//   const slowFilling = async (array, posX, posY) => {
-//     const savedXvalue = posX
-//     while (array.length > 0) {
-//       await new Promise(r => setTimeout(r, syncTimeout));
-//       let randomValue = getRandom(array);
-//       ctx.font = `${boxSize / 2}px serif`;
-
-//       // here comes drawing
-//       ctx.fillText(`${randomValue + 1}`, posX + boxSize * .25, posY + boxSize * 0.75);
-//       posX += boxSize;
-//       if (posX === boxSize * sqR + savedXvalue) {
-//         posX = savedXvalue;
-//         posY += boxSize;
-//       }
-//       array = array.filter((val) => {
-//         return val !== randomValue;
-//       })
-//     }
-//   }
-
-//   const fillCells = () => {
-//     if (ROW === 1) return;
-//     let posX = 0;
-//     let posY = 0;
-//     let loopThroughTable = 0
-//     const outerGrid = async () => {
-//       while (loopThroughTable < ROW) {
-//         await new Promise(r => setTimeout(r, syncTimeout * ROW + syncTimeout));
-//         slowFilling(table[loopThroughTable].options, posX, posY)
-//         posX += (sqR * boxSize)
-//         if (posX === boxSize * ROW) {
-//           posX = 0;
-//           posY += boxSize * sqR;
-//         }
-//         loopThroughTable++
-//       };
-//     }
-//     outerGrid()
-//   }
+drawBox(ctx, ROW, boxSize, DIM);

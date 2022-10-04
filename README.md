@@ -2,13 +2,20 @@
 
 Playing with Canvas.
 <details>
+<summary>Step 5: Sudoku table - able to fill only valid combinations</summary>
+
+ - You can replace any value in grid.it will change only color
+ - you can delete any entered value. For first time :)
+ - still no proper styling for page.
+</details>
+<details>
 <summary>Step 4: Spine is ready, time to add some bones</summary>
 
  - last time will show frame which contains all arrays
  will use only cell from this moment
  - added Favicon it is so much easier to work when you have your own favicon. recomend to all easy to find where is your project in hundred tables
  - still work on any square number, but from now it  could start to be more adjusted to 9 x 9. (Sudoku)
-</details
+</details>
 
 <details>
 <summary>Step 3: Delayed Multigrid filling random sequence</summary>
